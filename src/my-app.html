@@ -1,0 +1,162 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="my-app">
+
+  <template>
+
+    <style>
+      :host {
+        display: block;
+        --app-primary-color: #FFF;
+        --app-secondary-color: black;
+        --app-drawer-width: 220px;
+        --app-text-color: #212121;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      a:hover {
+      }
+      .appname:hover {
+        color: lightgrey;
+      }
+      .appname {
+        font-size: 35px;
+        color: var(--app-text-color);
+      }
+      app-header {
+        background-color: var(--app-primary-color);
+        color: #fff;
+        height: 150px;
+        /*--app-header-background-front-layer: {
+          background-image: url("http://puu.sh/pdvmx/bbeb2aad2b.png");
+        };*/
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        line-height: 40px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+      }
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+      .drawer-list a.subroute {
+        padding-left: 32px;
+      }
+      paper-fab {
+        position: fixed;
+        right: 25px;
+        bottom: 30px;
+    }
+    paper-icon-button {
+      color: var(--app-text-color);
+      margin-right: 15px;
+    }
+    </style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+
+    <app-drawer-layout fullbleed>
+
+      <!-- Drawer content -->
+      <app-drawer>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <!-- drawer-toggle -->
+          <a name="home" href="/">Home</a>
+          <a name="sculpture" href="/sculpture">Sculpture</a>
+          <a name="suzuki" href="/suzuki">Suzuki</a>
+          <a name="netsuke" href="/netsuke">Netsuke</a>
+          <a name="metronomes" href="/metronomes">Westcoast Metronomes</a>
+
+        </iron-selector>
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header condenses reveals effects="waterfall blend-background">
+          <app-toolbar primary>
+            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+            <a href="/"><div class="appname" title>APP TITLE</div></a>
+
+          </app-toolbar>
+        </app-header>
+        <paper-fab icon="add"></paper-fab>
+        <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
+          <my-home name="home"></my-home>
+          <my-suzuki name="suzuki"></my-suzuki>
+          <my-sculpture name="sculpture"></my-sculpture>
+          <my-netsuke name="netsuke"></my-netsuke>
+          <my-metronomes name="metronomes"></my-metronomes>
+        </iron-pages>
+
+      </app-header-layout>
+
+    </app-drawer-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'my-app',
+
+      properties: {
+
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        },
+
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
+
+      _routePageChanged: function(page) {
+        this.page = page || 'home';
+      },
+
+      _pageChanged: function(page) {
+        // load page import on demand.
+        this.importHref(
+          this.resolveUrl('my-' + page + '.html'), null, null, true);
+      }
+
+    });
+
+  </script>
+
+</dom-module>

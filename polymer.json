@@ -1,0 +1,10 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/my-app.html",
+  "fragments": [
+    "src/my-home.html",
+    "src/my-suzuki.html",
+    "src/my-sculpture.html",
+    "src/my-netsuke.html"
+  ]
+}
